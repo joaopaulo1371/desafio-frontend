@@ -1,0 +1,73 @@
+<div class="container">
+    <h1 class="title">Gerenciamento de Alunos</h1>
+  
+    <form class="student-form" #studentForm="ngForm" (ngSubmit)="onSave(studentForm)">
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label for="name">Nome</mat-label>
+            <input matInput type="text" id="name" [(ngModel)]="studentName" name="name" required />
+          </mat-form-field>
+      
+          <mat-form-field appearance="fill">
+            <mat-label for="email">E-mail</mat-label>
+            <input matInput type="email" id="email" [(ngModel)]="email" name="email" required />
+          </mat-form-field>
+      
+          <mat-form-field appearance="fill">
+            <mat-label for="dataNascimento">Data de nascimento</mat-label>
+            <input matInput type="date" id="dataNascimento" [(ngModel)]="dataNascimento" name="dataNascimento" required />
+          </mat-form-field>
+      
+          <mat-form-field appearance="fill">
+            <mat-label for="sexo">Sexo</mat-label>
+            <mat-select id="sexo" [(ngModel)]="sexo" name="sexo" required>
+              <mat-option [value]="'M'">Masculino</mat-option>
+              <mat-option [value]="'F'">Feminino</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      
+        <div *ngIf="formInvalid" class="error-message">
+          Por favor, preencha todos os campos.
+        </div>
+      
+        <button mat-raised-button color="primary" type="submit" class="btn save" [disabled]="!studentForm.form.valid">
+          Salvar
+        </button>
+      </form>
+      
+  
+    <h2 class="subtitle">Lista de Alunos</h2>
+    <table mat-table [dataSource]="students" class="mat-elevation-z8">
+      <ng-container matColumnDef="Nome">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let student"> {{student.Nome}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Email">
+        <th mat-header-cell *matHeaderCellDef> E-mail </th>
+        <td mat-cell *matCellDef="let student"> {{student.Email}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="DataNascimento">
+        <th mat-header-cell *matHeaderCellDef> Data de Nascimento </th>
+        <td mat-cell *matCellDef="let student"> {{student.DataNascimento}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Sexo">
+        <th mat-header-cell *matHeaderCellDef> Sexo </th>
+        <td mat-cell *matCellDef="let student"> {{student.Sexo}} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Ações">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let student; let i = index" class="mat-column-Ações">
+          <button mat-raised-button color="accent" class="btn edit" (click)="onEdit(student, i)">Editar</button>
+          <button mat-raised-button color="warn" class="btn delete" (click)="onDelete(student)">Remover</button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
