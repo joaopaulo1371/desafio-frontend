@@ -44,40 +44,40 @@ describe('DesafioComponent', () => {
   });
 
   it('should add a student', () => {
-    component.studentName = 'John Doe';
-    component.email = 'john.doe@example.com';
+    component.studentName = 'João Silve';
+    component.email = 'joao.silva@mail.com';
     component.dataNascimento = '2000-01-01';
     component.sexo = 'M';
     component.onSave({ valid: true } as NgForm);
 
     expect(component.students.length).toBe(1);
-    expect(component.students[0].Nome).toBe('John Doe');
+    expect(component.students[0].Nome).toBe('João Silve');
     expect(component.students[0].DataNascimento).toBe('2000-01-01');
   });
 
   it('should edit a student', () => {
     
     component.students = [
-      { Nome: 'John Doe', Email: 'john.doe@example.com', DataNascimento: '2000-01-01', Sexo: 'M' }
+      { Nome: 'João Silva', Email: 'joao.silva@mail.com', DataNascimento: '2000-01-01', Sexo: 'M' }
     ];
     
     component.onEdit(component.students[0], 0);
     
     
-    component.studentName = 'Jane Doe';
+    component.studentName = 'Joana Silva';
     component.dataNascimento = '1999-12-31';
     component.onSave({ valid: true } as NgForm);
 
     
     expect(component.students.length).toBe(1);
-    expect(component.students[0].Nome).toBe('Jane Doe');
+    expect(component.students[0].Nome).toBe('Joana Silva');
     expect(component.students[0].DataNascimento).toBe('1999-12-31');
   });
 
   it('should delete a student', () => {
     
     component.students = [
-      { Nome: 'John Doe', Email: 'john.doe@example.com', DataNascimento: '2000-01-01', Sexo: 'M' }
+      { Nome: 'João Silve', Email: 'joao.silva@mail.com', DataNascimento: '2000-01-01', Sexo: 'M' }
     ];
     
     component.onDelete(component.students[0]);
