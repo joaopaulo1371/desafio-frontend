@@ -17,7 +17,7 @@ describe('DesafioComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        DesafioComponent,
+        DesafioComponent,        
         FormsModule,
         MatTableModule,
         MatSelectModule,
@@ -32,6 +32,8 @@ describe('DesafioComponent', () => {
   });
 
   beforeEach(() => {
+    localStorage.clear();
+    
     fixture = TestBed.createComponent(DesafioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -47,25 +49,39 @@ describe('DesafioComponent', () => {
     component.dataNascimento = '2000-01-01';
     component.sexo = 'M';
     component.onSave({ valid: true } as NgForm);
+
     expect(component.students.length).toBe(1);
     expect(component.students[0].Nome).toBe('John Doe');
     expect(component.students[0].DataNascimento).toBe('2000-01-01');
   });
 
   it('should edit a student', () => {
-    component.students = [{ Nome: 'John Doe', Email: 'john.doe@example.com', DataNascimento: '2000-01-01', Sexo: 'M' }];
+    
+    component.students = [
+      { Nome: 'John Doe', Email: 'john.doe@example.com', DataNascimento: '2000-01-01', Sexo: 'M' }
+    ];
+    
     component.onEdit(component.students[0], 0);
+    
+    
     component.studentName = 'Jane Doe';
     component.dataNascimento = '1999-12-31';
     component.onSave({ valid: true } as NgForm);
+
+    
     expect(component.students.length).toBe(1);
     expect(component.students[0].Nome).toBe('Jane Doe');
     expect(component.students[0].DataNascimento).toBe('1999-12-31');
   });
 
   it('should delete a student', () => {
-    component.students = [{ Nome: 'John Doe', Email: 'john.doe@example.com', DataNascimento: '01-01-2000', Sexo: 'M' }];
+    
+    component.students = [
+      { Nome: 'John Doe', Email: 'john.doe@example.com', DataNascimento: '2000-01-01', Sexo: 'M' }
+    ];
+    
     component.onDelete(component.students[0]);
+
     expect(component.students.length).toBe(0);
   });
 });

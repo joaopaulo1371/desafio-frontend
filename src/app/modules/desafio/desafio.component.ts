@@ -7,13 +7,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { HttpClientModule } from '@angular/common/http';
+import { DateFormatPipe } from '../../pipe/date.pipe';
 
 @Component({
   selector: 'app-desafio',
   templateUrl: './desafio.component.html',
   styleUrls: ['./desafio.component.css'],
   standalone: true,
-  providers: [DesafioService],
+  providers: [DesafioService, DateFormatPipe],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,7 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    HttpClientModule
   ]
 })
 export class DesafioComponent implements OnInit {
@@ -34,15 +37,17 @@ export class DesafioComponent implements OnInit {
   displayedColumns: string[] = ['Nome', 'Email', 'DataNascimento', 'Sexo', 'Ações'];
   editingIndex: number | null = null;
 
-  constructor(private desafioService: DesafioService) {}
+  constructor(private desafioService: DesafioService, private dateFormatPipe: DateFormatPipe) {}
 
   ngOnInit(): void {
-    this.students = this.desafioService.getLocalStudents();
-    if (this.students.length === 0) {
-      this.desafioService.getStudents().subscribe(data => {
-        this.students = data;
-        this.desafioService.saveStudents(this.students);
-      });
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.students = this.desafioService.getLocalStudents();
+      if (this.students.length === 0) {
+        this.desafioService.getStudents().subscribe(data => {
+          this.students = data;
+          this.desafioService.saveStudents(this.students);
+        });
+      }
     }
   }
 
@@ -52,10 +57,11 @@ export class DesafioComponent implements OnInit {
       return;
     }
     this.formInvalid = false;
+    const formattedDate = this.dateFormatPipe.transform(this.dataNascimento, 'yyyy-MM-dd');
     const newStudent = {
       Nome: this.studentName,
       Email: this.email,
-      DataNascimento: this.dataNascimento,
+      DataNascimento: formattedDate,
       Sexo: this.sexo
     };
     if (this.editingIndex !== null) {
@@ -69,14 +75,15 @@ export class DesafioComponent implements OnInit {
     this.email = '';
     this.dataNascimento = '';
     this.sexo = 'M';
-    // Recarregar a lista de alunos
-    this.students = this.desafioService.getLocalStudents();
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.students = this.desafioService.getLocalStudents();
+    }
   }
 
   onEdit(student: any, index: number): void {
     this.studentName = student.Nome;
     this.email = student.Email;
-    this.dataNascimento = student.DataNascimento;
+    this.dataNascimento = student.DataNascimento.split('-').reverse().join('-'); 
     this.sexo = student.Sexo;
     this.editingIndex = index;
   }
